@@ -3,147 +3,109 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CatWiki - Cẩm nang nuôi mèo toàn tập</title>
+    <title>Siêu Wiki Mèo - UIT Project</title>
     <style>
-        :root { --primary: #ff9f43; --bg: #fffaf0; --text: #2d3436; }
-        body { font-family: 'Segoe UI', sans-serif; line-height: 1.6; color: var(--text); background: var(--bg); margin: 0; scroll-behavior: smooth; }
+        :root { --primary: #ff9f43; --secondary: #ee5253; --bg: #fffaf0; --text: #2d3436; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; background: var(--bg); color: var(--text); }
         
-        /* Menu điều hướng */
+        /* Menu Header */
         nav { background: white; padding: 15px; position: sticky; top: 0; box-shadow: 0 2px 10px rgba(0,0,0,0.1); z-index: 1000; text-align: center; }
-        nav a { margin: 0 15px; text-decoration: none; color: var(--text); font-weight: bold; transition: 0.3s; }
-        nav a:hover { color: var(--primary); }
+        nav a { margin: 0 15px; text-decoration: none; color: #333; font-weight: bold; cursor: pointer; transition: 0.3s; padding: 10px 15px; border-radius: 8px; }
+        nav a:hover { color: white; background: var(--primary); }
 
-        header { background: var(--primary); color: white; padding: 100px 20px; text-align: center; background-image: url('hero.jpg'); background-size: cover; background-position: center; position: relative; }
-        header:after { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); z-index: 1; }
-        header h1, header p { position: relative; z-index: 2; }
+        .container { max-width: 1000px; margin: 40px auto; padding: 20px; min-height: 60vh; }
         
-        .container { max-width: 1000px; margin: auto; padding: 20px; }
-        
-        .card { background: white; padding: 30px; margin-bottom: 30px; border-radius: 20px; box-shadow: 0 10px 20px rgba(0,0,0,0.05); transition: 0.3s; overflow: hidden; }
-        .card:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(0,0,0,0.1); }
-        
-        h2 { color: #e67e22; border-left: 5px solid var(--primary); padding-left: 15px; }
-        
-        /* Bảng thức ăn */
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; border-radius: 10px; overflow: hidden; }
-        th, td { padding: 15px; border: 1px solid #eee; text-align: left; }
-        th { background: #ff9f43; color: white; }
-        .bad { color: #d63031; font-weight: bold; }
-        .good { color: #27ae60; font-weight: bold; }
+        /* Logic ẩn/hiện trang */
+        .page { display: none; animation: fadeIn 0.5s; }
+        .page.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Grid giống mèo */
-        .gallery-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-top: 20px; }
-        .gallery-item { text-align: center; border: 1px solid #eee; border-radius: 15px; padding: 15px; background: #fffaf0; transition: 0.3s; }
-        .gallery-item:hover { border-color: var(--primary); transform: scale(1.03); }
-        .gallery-item img { width: 100%; height: 200px; object-fit: cover; border-radius: 10px; margin-bottom: 10px; }
+        /* Style cho 10 giống mèo */
+        .cat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-top: 20px; }
+        .cat-card { background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.05); text-align: center; padding-bottom: 20px; transition: 0.3s; border: 1px solid #eee; }
+        .cat-card:hover { transform: scale(1.03); box-shadow: 0 10px 25px rgba(0,0,0,0.1); border-color: var(--primary); }
+        .cat-card img { width: 100%; height: 200px; object-fit: cover; }
+        .cat-card h3 { color: #d35400; margin: 15px 0 5px 0; }
+        .cat-card p { font-size: 0.9em; color: #636e72; padding: 0 15px; }
+
+        header { background: var(--primary); color: white; text-align: center; padding: 60px 20px; border-radius: 0 0 50px 50px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        header h1 { margin: 0; font-size: 2.5em; }
         
-        /* Ảnh thức ăn */
-        .food-images { display: flex; gap: 15px; margin-top: 20px; justify-content: center; flex-wrap: wrap; }
-        .food-images img { width: 45%; max-width: 300px; border-radius: 15px; border: 4px solid white; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
-        
-        /* Ảnh catnip */
-        .catnip-img { width: 100%; max-width: 600px; border-radius: 20px; margin: 20px auto; display: block; border: 5px solid white; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
-        
-        footer { background: #333; color: white; text-align: center; padding: 20px; margin-top: 50px; }
+        /* Footer chuyên nghiệp cho UIT */
+        footer { background: #2d3436; color: #dfe6e9; text-align: center; padding: 40px 20px; margin-top: 60px; }
+        footer b { color: var(--primary); }
+
+        .hero-img { width: 100%; border-radius: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); margin-top: 20px; }
     </style>
 </head>
 <body>
 
 <nav>
-    <a href="#tongquan">Tổng quan</a>
-    <a href="#giongmeo">Các giống mèo</a>
-    <a href="#thucan">Dinh dưỡng</a>
-    <a href="#chamsoc">Chăm sóc</a>
-    <a href="#dochoi">Đồ chơi</a>
+    <a onclick="showPage('home')">🏠 Trang Chủ</a>
+    <a onclick="showPage('breeds')">🐾 10 Giống Mèo</a>
+    <a onclick="showPage('care')">🧼 Chăm Sóc</a>
 </nav>
 
 <header>
-    <h1>😻 CAT WIKI: CẨM NANG TOÀN TẬP</h1>
-    <p>Nơi chia sẻ mọi thứ để "Hoàng Thượng" hạnh phúc</p>
+    <h1>CAT WIKI MULTI-PAGE</h1>
+    <p>Bài tập mở rộng: Xây dựng Website đơn giản - Môn Nhập môn mạng máy tính</p>
 </header>
 
 <div class="container">
-
-    <div id="tongquan" class="card">
-        <h2>🧬 1. Tổng quan về loài mèo</h2>
-        <p>Mèo (<i>Felis catus</i>) không chỉ là thú cưng mà còn là những người bạn có khả năng đặc biệt:</p>
-        <ul>
-            <li><strong>Siêu thính giác:</strong> Nghe được tần số cao gấp 3 lần con người.</li>
-            <li><strong>Siêu nhảy:</strong> Nhảy cao gấp 5-6 lần chiều cao cơ thể.</li>
-            <li><strong>Fact:</strong> Một con mèo có thể dành 70% cuộc đời để ngủ và mỗi chiếc mũi là một "vân tay" duy nhất.</li>
-        </ul>
+    <div id="home" class="page active">
+        <h2>Chào mừng đến với thế giới mèo!</h2>
+        <p>Đây là dự án tìm hiểu về Web Server và cấu trúc HTML thực tế. Trang web cung cấp kiến thức toàn tập về cách nuôi dưỡng và đặc điểm của các giống mèo phổ biến nhất.</p>
+        <img src="hero.jpg" class="hero-img" alt="Banner Mèo">
     </div>
 
-    <div id="giongmeo" class="card">
-        <h2>🐾 2. Các giống mèo phổ biến</h2>
-        <div class="gallery-grid">
-            <div class="gallery-item">
-                <img src="meo-ta.jpg" alt="Mèo Ta">
-                <strong>Mèo Ta:</strong> Khỏe mạnh, thông minh, cực kỳ dễ nuôi và phù hợp cho sinh viên.
-            </div>
-            <div class="gallery-item">
-                <img src="meo-aln.jpg" alt="Mèo Anh Lông Ngắn">
-                <strong>Mèo Anh Lông Ngắn:</strong> Mặt tròn, má bánh bao, lười vận động nhưng rất hiền.
-            </div>
-            <div class="gallery-item">
-                <img src="meo-ba-tu.jpg" alt="Mèo Ba Tư">
-                <strong>Mèo Ba Tư:</strong> Quý tộc, lông dài xù, cần chải chuốt kỹ lưỡng mỗi ngày.
-            </div>
+    <div id="breeds" class="page">
+        <h2 style="text-align: center; color: #d35400;">🐾 Khám phá 10 giống mèo cực phẩm</h2>
+        <div class="cat-grid">
+            <div class="cat-card"><img src="meo-ta.jpg"><h3>1. Mèo Ta</h3><p>Thông minh, khỏe mạnh và cực kỳ dễ thích nghi.</p></div>
+            <div class="cat-card"><img src="meo-aln.jpg"><h3>2. Anh Lông Ngắn</h3><p>Gương mặt tròn trĩnh, tính tình hiền lành, điềm tĩnh.</p></div>
+            <div class="cat-card"><img src="meo-ba-tu.jpg"><h3>3. Mèo Ba Tư</h3><p>Vẻ đẹp quý tộc với bộ lông dài xù đặc trưng.</p></div>
+            <div class="cat-card"><img src="meo-xiem.jpg"><h3>4. Mèo Xiêm</h3><p>Giống mèo cổ xưa với đôi mắt xanh cuốn hút.</p></div>
+            <div class="cat-card"><img src="meo-ragdoll.jpg"><h3>5. Mèo Ragdoll</h3><p>Rất quấn chủ và có thân hình to lớn, mềm mại.</p></div>
+            <div class="cat-card"><img src="meo-maine-coon.jpg"><h3>6. Maine Coon</h3><p>Được mệnh danh là "người khổng lồ dịu dàng".</p></div>
+            <div class="cat-card"><img src="meo-sphynx.jpg"><h3>7. Mèo Sphynx</h3><p>Độc lạ với cơ thể không lông, rất thông minh.</p></div>
+            <div class="cat-card"><img src="meo-bengal.jpg"><h3>8. Mèo Bengal</h3><p>Sở hữu bộ lông vằn báo đầy hoang dã.</p></div>
+            <div class="cat-card"><img src="meo-muop.jpg"><h3>9. Mèo Mướp</h3><p>Người bạn thân thiết trong mọi gia đình Việt.</p></div>
+            <div class="cat-card"><img src="meo-scottish.jpg"><h3>10. Mèo Tai Cụp</h3><p>Vẻ ngoài đáng yêu với đôi tai cụp đặc trưng.</p></div>
         </div>
     </div>
 
-    <div id="thucan" class="card">
-        <h2>🥩 3. Chế độ dinh dưỡng (Phải xem)</h2>
-        <p>Chọn đúng loại thực phẩm giúp mèo khỏe mạnh và kéo dài tuổi thọ.</p>
-        
-        <div class="food-images">
-            <img src="an-hat.jpg" alt="Thức ăn hạt">
-            <img src="pate.jpg" alt="Pate mèo">
+    <div id="care" class="page">
+        <h2>🧼 Bí quyết chăm sóc "Hoàng Thượng"</h2>
+        <p>Để mèo luôn khỏe mạnh, bạn cần chú ý các điều sau:</p>
+        <div style="background: white; padding: 20px; border-radius: 15px; border-left: 5px solid var(--primary);">
+            <ul>
+                <li><strong>Dinh dưỡng:</strong> Cung cấp đủ đạm và nước sạch mỗi ngày.</li>
+                <li><strong>Vệ sinh:</strong> Dọn khay cát ít nhất 1 lần/ngày để tránh vi khuẩn.</li>
+                <li><strong>Sức khỏe:</strong> Tiêm phòng định kỳ theo hướng dẫn của thú y.</li>
+            </ul>
         </div>
-        
-        <table>
-            <tr>
-                <th>Nên ăn (Good ✅)</th>
-                <th>Tuyệt đối tránh (Bad ❌)</th>
-            </tr>
-            <tr>
-                <td class="good">Thịt gà, cá hấp (lọc xương)</td>
-                <td class="bad">Socola & Caffeine (Ngộ độc)</td>
-            </tr>
-            <tr>
-                <td class="good">Pate, ức gà luộc</td>
-                <td class="bad">Hành, tỏi (Phá hủy hồng cầu)</td>
-            </tr>
-            <tr>
-                <td class="good">Thức ăn hạt (Royal Canin, Me-O)</td>
-                <td class="bad">Sữa bò (Gây tiêu chảy)</td>
-            </tr>
-        </table>
     </div>
-
-    <div id="chamsoc" class="card">
-        <h2>🧼 4. Vệ sinh và Sức khỏe</h2>
-        <p><strong>Tắm:</strong> 1-2 lần/tháng bằng sữa tắm chuyên dụng. Đừng dùng sữa tắm người nhé!</p>
-        <p><strong>Y tế:</strong> Nhớ tiêm phòng đầy đủ các bệnh cơ bản và tẩy giun định kỳ 3-6 tháng/lần.</p>
-        <p><strong>Tip:</strong> Mua một cái trụ cào móng để tránh sofa nhà bạn bị mèo "khai tử".</p>
-    </div>
-
-    <div id="dochoi" class="card">
-        <h2>🧸 5. Đồ chơi & Hành vi</h2>
-        <p>Mèo cần vận động ít nhất 15 phút mỗi ngày để giảm stress.</p>
-        <ul>
-            <li><strong>Cần câu mèo:</strong> Kích thích bản năng săn mồi.</li>
-            <li><strong>Cỏ mèo (Catnip):</strong> Thư giãn cực độ cho "Hoàng Thượng".</li>
-        </ul>
-        <img src="catnip.jpg" alt="Mèo đang chơi catnip" class="catnip-img">
-    </div>
-
 </div>
 
 <footer>
-    <p>Dự án thực tế: Xây dựng Website đơn giản - UIT</p>
-    <p>Tác giả: Trần Linh Nhựt (MSSV: 25521355)</p>
+    <p>Thực hiện bởi: <b>Trần Linh Nhựt</b></p>
+    <p>MSSV: <b>25521355</b> | Lớp: <b>IT005.Q25.2</b></p>
+    <p>Trường Đại học Công nghệ Thông tin - ĐHQG TP.HCM</p>
 </footer>
+
+<script>
+    function showPage(pageId) {
+        // Ẩn tất cả các trang
+        var pages = document.getElementsByClassName('page');
+        for (var i = 0; i < pages.length; i++) {
+            pages[i].classList.remove('active');
+        }
+        // Hiện trang được chọn
+        document.getElementById(pageId).classList.add('active');
+        // Cuộn lên đầu trang cho mượt
+        window.scrollTo(0, 0);
+    }
+</script>
 
 </body>
 </html>
